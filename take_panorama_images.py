@@ -88,9 +88,17 @@ def _interpolate_loop(
     """
     
     joints = list(steps[0].keys())
-    photo_idx_global = 0  # running counter for filenames
 
     os.makedirs(cfg.photo_folder, exist_ok=True)
+
+    # Empty the photo folder before starting
+    for filename in os.listdir(cfg.photo_folder):
+        file_path = os.path.join(cfg.photo_folder, filename)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            logging.error(f"Error deleting file {file_path}: {e}")
 
     for seg_idx in range(len(steps) - 1):
         if seg_idx % 2 == 1:
@@ -166,3 +174,14 @@ def player(cfg: PlayerConfig):
 
 if __name__ == "__main__":
     player()
+
+    command = r"nona -o out -m TIFF template.pto"
+    folder = r"photos"
+    # append every file name in the folder to the command
+    for filename in os.listdir(folder):
+        if filename.endswith(".jpg") or filename.endswith(".png"):
+            command += f" {os.path.join(folder, filename)}"
+
+    # execute the command
+    os.system(command)
+
