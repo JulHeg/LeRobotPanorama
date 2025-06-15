@@ -184,4 +184,4 @@ if __name__ == "__main__":
 
     # execute the command
     os.system(command)
-
+    print("Successfully created panorama image")
